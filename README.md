@@ -81,20 +81,108 @@ Po prvním spuštění můžeš server libovolně doladit ručně a skript ti to
 
 ---
 
-## Migrace na jiný router
+## Installation
 
-1. Spusť skript na původním routeru
-2. Získej exportované `.p12` soubory (CA + server cert)
-3. Získej `.ovpn` soubory pro klienty
+Tento skript není balíček ani plugin — jde o čistý MikroTik RouterOS skript.  
+Instalace spočívá pouze v jeho vložení do routeru.
+
+### 1) Otevři WinBox / WebFig / SSH
+Připoj se k routeru, kde bude OpenVPN server běžet.
+
+### 2) Vytvoř nový skript
+V WinBoxu:
+
+```
+System → Scripts → Add
+```
+
+Nebo přes CLI:
+
+```
+/system/script/add name=ovpn-setup source=""
+```
+
+### 3) Vlož obsah skriptu
+Zkopíruj celý obsah `.rsc` skriptu do pole **Source**.
+
+### 4) Uprav proměnné podle potřeby
+V horní části skriptu uprav:
+
+- `clientSecrets` – seznam klientů a jejich hesel
+- `serverName` – název OVPN serveru
+- `serverAddress` – veřejná adresa serveru
+- `clientPassphrase` – heslo pro export certifikátů
+- `ipLocalAddress` – IP adresa serveru v OVPN síti
+- `ipPoolRange` – rozsah IP adres pro klienty
+
+### 5) Ulož skript
+Klikni **OK** nebo proveď:
+
+```
+/system/script/set ovpn-setup source=[file get scriptfile.txt contents]
+```
+
+---
+
+## Usage
+
+Skript se spouští ručně — není určen pro automatické opakované spouštění.
+
+### 1) Spusť skript
+
+```
+/system/script/run ovpn-setup
+```
+
+### 2) Skript provede:
+
+- vytvoření CA certifikátu (pokud neexistuje)
+- vytvoření server certifikátu (pokud neexistuje)
+- vytvoření klientských certifikátů
+- export `.p12` záloh (CA + server cert)
+- export `.ovpn` souborů pro klienty
+- vytvoření/úpravu IP poolu
+- vytvoření/úpravu PPP profilu
+- vytvoření/úpravu OVPN serveru
+- vytvoření/úpravu PPP secretů
+
+### 3) Po dokončení najdeš soubory v `/file`
+
+- `cert_export_*.p12` — zálohy certifikátů
+- `<serverAddress>_<client>.ovpn` — klientské konfigurace
+
+Tyto soubory si stáhni a bezpečně ulož.
+
+---
+
+## Re-running the script
+
+Skript je **idempotentní**, takže:
+
+- existující certifikáty nepřepíše
+- existující klienty nepřegeneruje
+- OVPN server nepřemaže
+- pouze opraví kritické parametry (certifikát, pool, profil)
+
+To znamená, že:
+
+- můžeš skript spustit kdykoli znovu
+- ruční úpravy OVPN serveru zůstanou zachovány
+- skript slouží jako bezpečný „refresh“ konfigurace
+
+---
+
+## Migration to a new router
+
+1. Spusť skript na starém routeru
+2. Stáhni `.p12` soubory (CA + server cert)
+3. Stáhni `.ovpn` soubory pro klienty
 4. Na novém routeru importuj `.p12`
-5. Spusť skript znovu — automaticky:
-   - opraví názvy certifikátů
-   - ověří private-key
-   - nastaví certifikát na OVPN server
-   - vytvoří pool, profil, PPP secrets
-6. Ručně nastav port, TLS-auth, push-routes, atd.
+5. Vlož skript a spusť ho
+6. Skript automaticky opraví názvy certifikátů a nastaví server
+7. Ručně nastav port, TLS-auth, push-routes, atd.
 
-Hotovo — klienti se připojí bez změny konfigurace.
+Klienti se připojí bez změny konfigurace.
 
 ---
 
