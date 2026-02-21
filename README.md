@@ -1,4 +1,4 @@
-# MikroTik OpenVPN Automation Script
+# MikroTik OpenVPN Server Automation Script
 
 ## Overview
 Tento skript automatizuje kompletní přípravu OpenVPN serveru na MikroTiku včetně:
