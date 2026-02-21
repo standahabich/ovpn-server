@@ -177,7 +177,7 @@ To znamená, že:
 1. Spusť skript na starém routeru  
 2. Stáhni `.p12` soubory (CA + server cert)  
 3. Stáhni `.ovpn` soubory pro klienty  
-4. Na novém routeru importuj `.p12` ( /certificate/import file-name=...p12 passphrase=... )
+4. Na novém routeru importuj `.p12` `( /certificate/import file-name=...p12 passphrase=... )`
 5. Vlož skript a spusť ho  
 6. Skript automaticky opraví názvy certifikátů a nastaví server  
 7. Ručně nastav port, TLS-auth, push-routes, atd.  
