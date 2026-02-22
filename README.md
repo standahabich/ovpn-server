@@ -53,8 +53,8 @@ Výhody:
 - podepíše je CA
 - opraví názvy importovaných certifikátů
 - ověří, že CA i server certifikát mají privátní klíč
-- exportuje CA + server certifikát jako `.p12`
-- exportuje klientské certy + klíče jako PEM
+- exportuje CA + server certifikát jako `.p12` do `/file`
+- exportuje klientské certy + klíče jako PEM do `/file` pro potřebu generování .ovpn souborů
 
 ### OpenVPN server
 - vytvoří nebo upraví IP pool
@@ -66,8 +66,8 @@ Výhody:
 Pro každého klienta skript:
 - smaže všechny .opvn soubory z `/file`
 - exportuje certifikát a klíč
-- vytvoří `.ovpn` konfigurační soubor
-- pojmenuje ho jako `<serverAddress>_<clientName>.ovpn`
+- vytvoří `.ovpn` konfigurační soubory pro klienty
+- pojmenuje je jako `<serverAddress>_<clientName>.ovpn`
 - uklidí dočasné soubory
 
 ---
