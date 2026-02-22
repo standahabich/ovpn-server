@@ -85,7 +85,7 @@
 
 :if ([:len [/interface/ovpn-server/server/find where name=$serverName]] > 0) do={
     /log info ("OVPN: EDIT SERVER: $serverName")
-    /interface/ovpn-server/server/set [/interface/ovpn-server/server/find where name=$serverName] certificate=$svNameCert require-client-certificate=yes cipher=aes256-cbc disabled=no default-profile=$profileName
+    /interface/ovpn-server/server/set [/interface/ovpn-server/server/find where name=$serverName] certificate=$svNameCert require-client-certificate=yes default-profile=$profileName
 } else={
     /log info ("OVPN: ADD SERVER: $serverName")
     /interface/ovpn-server/server/add name=$serverName certificate=$svNameCert require-client-certificate=yes cipher=aes256-cbc disabled=no default-profile=$profileName
@@ -99,8 +99,8 @@
 
 :foreach c in=$clientSecrets do={
 
-    :local user (:$c->"name")
-    :local pass (:$c->"pass")
+    :local user ($c->"name")
+    :local pass ($c->"pass")
 
     # KONTROLA EXISTENCE CERTIFIKÁTU
     :if ([:len [/certificate/find where name=($clNameCert . $user)]] > 0) do={
